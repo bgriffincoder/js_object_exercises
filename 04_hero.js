@@ -1,4 +1,4 @@
-/**
+e/**
  * It's time to create a hero to dispatch these pesky monsters.
  *
  * Copy your code from the previous exercise.
@@ -39,8 +39,93 @@
     ///////////////////////////
     // Put your code here!
     ///////////////////////////
+    function LivingThing(monsterName, monsterHealth){
+      let name = monsterName; //private variable
+      let health = monsterHealth //private variable
 
-    
+      //public method - want people be able to access the methods so .this stays
+
+      this.setHealth = function(newHealth) {
+        health = newHealth;
+      }
+
+      this.isAlive = function() {
+        if(health > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      this.getName = function() {
+        return name;
+      }
+
+      this.getHealth = function() {
+        return health;
+      }
+    }
+
+    function getRandomIntInclusive(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+    }
+
+    function Hero(heroName, heroHealth) {
+      LivingThing.call(this, heroName, heroHealth); //like super() for extends ES6
+
+
+      this.attack = function(monster) {
+
+        //generate random numbers between 0 and 10 for the damage taken in the attack for both
+        let heroDamage = getRandomIntInclusive(0,10);
+        let monsterDamage = getRandomIntInclusive(0,10);
+
+        //decrease the health of the living thing with the random nuber generated
+        monster.setHealth(monster.getHealth() - monsterDamage);
+
+        //decrease the health of the hero (this) with the random nuber generated
+        this.setHealth(this.getHealth() - heroDamage);
+
+        console.log(this.getName() + " took " + heroDamage + " damage.");
+        console.log(monster.getName() + " took " + monsterDamage + " damage.");
+      }
+
+      this.fight = function(arrayOfMonsters) {
+          //loop over passed in array of monsters
+          //only call attack if that monster is still alive or the hero is dead
+          for(let i = 0; i < arrayOfMonsters.length; i++) {
+
+
+            //arrayOfMonsters[i].isAlive();
+            //this.attack(arrayOfMonsters[i]);
+
+            if(arrayOfMonsters[i].isAlive()) {
+              while (arrayOfMonsters[i].isAlive() || this.isAlive()) {
+                this.attack(arrayOfMonsters[i]);
+              }
+            }
+
+          }
+
+      }
+
+    }
+
+
+
+
+
+    //console.log(hero1.isAlive()); //returns true
+
+    let rat = new LivingThing("Rat",5);
+    let goblin = new LivingThing("Goblin",30);
+    let ogre = new LivingThing("Ogre",80);
+
+    let monsters = [rat, goblin, ogre];
+
+    let hero = new Hero("Superman", 100);
 
     //The code below should work when you are done
     console.log("A hero emerges!");
